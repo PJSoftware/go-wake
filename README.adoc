@@ -1,0 +1,35 @@
+= go-wake
+Peter Jones <pjsoftware@petesplace.id.au>
+
+Provides the ability to prevent your PC from going to sleep while a long-running program is active.
+
+== Getting started
+
+This package can be imported into your module via:
+
+[,sh]
+----
+go get github.com/pjsoftware/go-wake
+----
+
+and then:
+
+[,go]
+----
+import "github.com/pjsoftware/go-wake"
+----
+
+Typical code might look like:
+
+[,go]
+----
+func main() {
+  wake.StayAwake()
+  defer wake.AllowSleep()
+
+  doLongRunningThing()
+}
+----
+
+Under the hood, `StayAwake()` (and its companion option, `KeepScreenOn()`) sends a message to the system that detects user activity, every few minutes, telling it to reset its "inactivity" timer.
+Once your program ends, this signal will no longer be sent, so forgetting to use `AllowSleep()` has no real impact -- but it is good practice to call it anyway.
